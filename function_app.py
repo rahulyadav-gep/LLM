@@ -9,6 +9,14 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 def http_trigger_llmgcp(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
+    # Extract the user's question from the HTTP request
+    user_question = req.params.get('question')
+
+    # Check if the user provided a question
+    if user_question is None:
+        return func.HttpResponse("Please provide a question in the 'question' parameter.", status_code=400)
+
+    # Configure other parameters as needed
     palm.configure(api_key="AIzaSyAgDWLWSdeZUai_2Ka8Afej_nBq9-pgaRM")
 
     defaults = {
@@ -21,9 +29,9 @@ def http_trigger_llmgcp(req: func.HttpRequest) -> func.HttpResponse:
         'stop_sequences': []
     }
 
-    # Corrected prompt with triple quotes
-    prompt = """I want to play tennis today. what skills are required in tennis"""
-
+    # Use the user's question as the prompt
+    prompt = user_question
+    
     response = palm.generate_text(
         **defaults,
         prompt=prompt
@@ -35,5 +43,4 @@ def http_trigger_llmgcp(req: func.HttpRequest) -> func.HttpResponse:
     }
 
     # Create an HTTP response with JSON content type
-    return func.HttpResponse(json.dumps(json_response), mimetype="application/json", status_code=200) 
-       
+    return func.HttpResponse(json.dumps(json_response), mimetype="application/json", status_code=200)
