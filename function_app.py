@@ -14,7 +14,7 @@ def http_trigger_llmgcp(req: func.HttpRequest) -> func.HttpResponse:
 
     # Check if the user provided a question
     if user_question is None:
-        return func.HttpResponse("Please provide a question in the 'question' parameter.", status_code=400)
+        return func.HttpResponse("Please ask a question in the 'question' parameter.", status_code=400)
 
     # Configure other parameters as needed
     palm.configure(api_key="AIzaSyAgDWLWSdeZUai_2Ka8Afej_nBq9-pgaRM")
